@@ -1,20 +1,24 @@
-import {Form, Modal, Button} from "react-bootstrap"
-import {useRef} from "react"
-import {useBudgets, UNCATOGRIZED_BUDGET_ID} from "../context/BudgetContext"
-// eslint-disable-next-line react/prop-types
-export default function AddExpenseModal({show, handleClose, deafultBudgetId}) {
+import { Form, Modal, Button } from "react-bootstrap"
+import { useRef } from "react"
+import {useBudgets, UNCATEGORIZED_BUDGET_ID} from "../context/BudgetsContext.jsx";
+
+
+export default function AddExpenseModal({
+                                            show,
+                                            handleClose,
+                                            defaultBudgetId,
+                                        }) {
     const descriptionRef = useRef()
     const amountRef = useRef()
-    const budgetIdref = useRef()
-
-    const {addExpense, budgets} = useBudgets()
+    const budgetIdRef = useRef()
+    const { addExpense, budgets } = useBudgets()
 
     function handleSubmit(e) {
         e.preventDefault()
         addExpense({
-            descriptionRef: descriptionRef.current.value,
+            description: descriptionRef.current.value,
             amount: parseFloat(amountRef.current.value),
-            id: budgetIdref.current.value,
+            budgetId: budgetIdRef.current.value,
         })
         handleClose()
     }
@@ -23,37 +27,38 @@ export default function AddExpenseModal({show, handleClose, deafultBudgetId}) {
         <Modal show={show} onHide={handleClose}>
             <Form onSubmit={handleSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title> New Expense </Modal.Title>
+                    <Modal.Title>New Expense</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-3" controlId="description">
-                        <Form.Label> Description </Form.Label>
-                        <Form.Control ref={descriptionRef} type='text' required/>
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control ref={descriptionRef} type="text" required />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="amount">
                         <Form.Label>Amount</Form.Label>
-                        <Form.Control ref={amountRef}
-                                      type='number'
-                                      required
-                                      min={0}
-                                      step={0.01}
+                        <Form.Control
+                            ref={amountRef}
+                            type="number"
+                            required
+                            min={0}
+                            step={0.01}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="budgetId">
                         <Form.Label>Budget</Form.Label>
-                        <Form.Select
-                            defaultValue={deafultBudgetId}
-                            ref={budgetIdref}>
-                            <option id={UNCATOGRIZED_BUDGET_ID}>Uncatorized</option>
+                        <Form.Select defaultValue={defaultBudgetId} ref={budgetIdRef}>
+                            <option id={UNCATEGORIZED_BUDGET_ID}>Uncategorized</option>
                             {budgets.map(budget => (
-                                <option key={budget.id} value={budget.id}>{budget.name}</option>
+                                <option key={budget.id} value={budget.id}>
+                                    {budget.name}
+                                </option>
                             ))}
                         </Form.Select>
                     </Form.Group>
-
-
                     <div className="d-flex justify-content-end">
-                        <Button varient='primary' type='submit'> Add</Button>
+                        <Button variant="primary" type="submit">
+                            Add
+                        </Button>
                     </div>
                 </Modal.Body>
             </Form>
